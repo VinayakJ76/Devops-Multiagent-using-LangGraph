@@ -11,3 +11,4 @@ services:
       - OPENAI_API_KEY=your_key_here
     volumes:
       - ../data:/app/data
+    restart: always

@@ -44,3 +44,7 @@ async def upload_url(req: URLReq):
 
     docs = load_url(req.url)
     return {"status": ingest_documents(docs)}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}

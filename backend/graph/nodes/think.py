@@ -1,17 +1,22 @@
-from langchain.chat_models import ChatOpenAI
+from config.llm import get_llm
 
-llm = ChatOpenAI(temperature=0)
+llm = get_llm()
 
 def think_node(state):
 
     prompt = f"""
-    You are a Senior DevOps Engineer.
+    You are a Senior DevOps Engineer AI.
 
     Context:
     {state.get('context','')}
 
-    Analyze request:
+    User Request:
     {state['query']}
+
+    Analyze deeply:
+    - What is the problem?
+    - What system is involved?
+    - What risks exist?
     """
 
     reasoning = llm.predict(prompt)

@@ -1,11 +1,11 @@
 from langchain.vectorstores import Chroma
-from langchain.embeddings import OpenAIEmbeddings
+from knowledge.embeddings import get_embeddings
 
-def get_retriever():
+def get_retriever(persist_dir="data/chroma_store"):
 
     db = Chroma(
-        persist_directory="data/chroma_store",
-        embedding_function=OpenAIEmbeddings()
+        persist_directory=persist_dir,
+        embedding_function=get_embeddings()
     )
 
     return db.as_retriever(search_kwargs={"k": 4})

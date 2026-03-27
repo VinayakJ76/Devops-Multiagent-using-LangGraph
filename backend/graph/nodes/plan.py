@@ -1,11 +1,19 @@
-from langchain.chat_models import ChatOpenAI
+from config.llm import get_llm
 
-llm = ChatOpenAI(temperature=0)
+llm = get_llm()
 
 def plan_node(state):
 
-    plan = llm.predict(
-        f"Break into actionable DevOps steps:\n{state['query']}"
-    )
+    prompt = f"""
+    Break this DevOps task into clear actionable steps.
+    Return as numbered list.
 
-    return {**state, "plan": plan.split("\n")}
+    Task:
+    {state['query']}
+    """
+
+    response = llm.predict(prompt)
+
+    steps = [s.strip() for s in response.split("\n") if s.strip()]
+
+    return {**state, "plan": steps}

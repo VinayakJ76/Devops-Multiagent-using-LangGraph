@@ -1,11 +1,27 @@
+from config.llm import get_llm
+
+llm = get_llm()
+
 def router_node(state):
-    q = state["query"].lower()
 
-    if "deploy" in q or "kubernetes" in q:
-        agent = "deploy"
-    elif "monitor" in q or "cpu" in q:
-        agent = "watchdog"
+    query = state["query"]
+
+    prompt = f"""
+    Classify this DevOps request into one:
+    - code
+    - deploy
+    - watchdog
+
+    Request: {query}
+    """
+
+    agent = llm.predict(prompt).lower()
+
+    if "deploy" in agent:
+        agent_type = "deploy"
+    elif "watchdog" in agent or "monitor" in agent:
+        agent_type = "watchdog"
     else:
-        agent = "code"
+        agent_type = "code"
 
-    return {**state, "agent_type": agent}
+    return {**state, "agent_type": agent_type}

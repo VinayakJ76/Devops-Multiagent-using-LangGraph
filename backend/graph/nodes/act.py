@@ -7,17 +7,24 @@ def act_node(state):
 
     agent = state["agent_type"]
     query = state["query"]
+    plan = state.get("plan", [])
+
+    result = {}
 
     if agent == "code":
         result = run_security_scan(query)
 
     elif agent == "deploy":
-        result = deploy_to_k8s(query)
+
+        if "terraform" in query.lower():
+            result["terraform"] = run_terraform("terraform apply -auto-approve")
+
+        result["k8s"] = deploy_to_k8s(query)
 
     elif agent == "watchdog":
         result = check_metrics(query)
 
     else:
-        result = "Unknown"
+        result = "Unknown agent"
 
-    return {**state, "result": result}
+    return {**state, "result": str(result)}
