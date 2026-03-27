@@ -1,30 +1,23 @@
-from tools.security_tool import run_security_scan
-from tools.kubernetes_tool import deploy_to_k8s
-from tools.monitoring_tool import check_metrics
-from tools.terraform_tool import run_terraform
+from agents.code_screener import CodeScreenerAgent
+from agents.deploy_buddy import DeployBuddyAgent
+from agents.watchdog import WatchDogAgent
 
 def act_node(state):
 
-    agent = state["agent_type"]
-    query = state["query"]
-    plan = state.get("plan", [])
+    agent_type = state["agent_type"]
 
-    result = {}
+    if agent_type == "code":
+        agent = CodeScreenerAgent()
 
-    if agent == "code":
-        result = run_security_scan(query)
+    elif agent_type == "deploy":
+        agent = DeployBuddyAgent()
 
-    elif agent == "deploy":
-
-        if "terraform" in query.lower():
-            result["terraform"] = run_terraform("terraform apply -auto-approve")
-
-        result["k8s"] = deploy_to_k8s(query)
-
-    elif agent == "watchdog":
-        result = check_metrics(query)
+    elif agent_type == "watchdog":
+        agent = WatchDogAgent()
 
     else:
-        result = "Unknown agent"
+        return {**state, "result": "Unknown agent"}
 
-    return {**state, "result": str(result)}
+    result = agent.execute(state)
+
+    return {**state, "result": result}
