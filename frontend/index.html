@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <title>DevOps AI Config</title>
+  </head>
+  <body>
+    <h2>Tool Configuration</h2>
+
+    <textarea id="configBox" rows="25" cols="100"></textarea>
+    <br />
+    <button onclick="saveConfig()">Save Config</button>
+
+    <script>
+      async function loadConfig() {
+        const res = await fetch("/config/tools.config.json");
+        const data = await res.json();
+        document.getElementById("configBox").value = JSON.stringify(
+          data,
+          null,
+          2,
+        );
+      }
+
+      async function saveConfig() {
+        const config = document.getElementById("configBox").value;
+
+        await fetch("/save-config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: config,
+        });
+
+        alert("Config saved!");
+      }
+
+      loadConfig();
+    </script>
+  </body>
+</html>

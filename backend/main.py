@@ -48,3 +48,16 @@ async def upload_url(req: URLReq):
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+from fastapi import Request
+
+@app.post("/save-config")
+async def save_config(request: Request):
+
+    data = await request.json()
+
+    with open("frontend/config/tools.config.json", "w") as f:
+        import json
+        json.dump(data, f, indent=2)
+
+    return {"status": "saved"}

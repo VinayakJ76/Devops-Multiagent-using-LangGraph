@@ -1,0 +1,53 @@
+{
+  "global": {
+    "environment": "dev",
+    "log_level": "INFO"
+  },
+
+  "github": {
+    "enabled": true,
+    "provider": "github",
+    "auth": {
+      "type": "token",
+      "token": "YOUR_GITHUB_TOKEN"
+    },
+    "repos": ["VinayakJ76/Devops-Multiagent-using-LangGraph"]
+  },
+
+  "kubernetes": {
+    "enabled": true,
+    "cluster_name": "dev-cluster",
+    "auth": {
+      "type": "kubeconfig",
+      "path": "~/.kube/config"
+    },
+    "namespace": "default"
+  },
+
+  "terraform": {
+    "enabled": true,
+    "working_dir": "/infra",
+    "auto_approve": true
+  },
+
+  "cicd": {
+    "provider": "jenkins",
+    "enabled": true,
+    "url": "http://jenkins:8080",
+    "auth": {
+      "user": "admin",
+      "token": "YOUR_JENKINS_TOKEN"
+    }
+  },
+
+  "monitoring": {
+    "provider": "prometheus",
+    "enabled": true,
+    "url": "http://prometheus:9090"
+  },
+
+  "security": {
+    "enabled": true,
+    "tools": ["trivy", "semgrep"]
+  }
+}
